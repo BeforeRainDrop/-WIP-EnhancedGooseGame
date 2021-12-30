@@ -27,7 +27,7 @@ public class AddPlayersScenarios {
 		String players = PLAYER_1 + "\n" + PLAYER_2 + "\n" + PLAYER_2 + "\n" + PLAYER_3 + "\n";
 		ByteArrayInputStream in = new ByteArrayInputStream(players.getBytes());
 		try (Scanner gameInput = new Scanner(in)) {
-			List<String> playersName = Main.addPlayers(gameInput, NUMBER_OF_PLAYERS);
+			List<String> playersName = new Main(gameInput).addPlayers(NUMBER_OF_PLAYERS);
 			Assert.assertEquals(EXPECTED_RESULT, playersName);
 		}
 	}
@@ -37,7 +37,7 @@ public class AddPlayersScenarios {
 		String players = PLAYER_1 + "\n" + PLAYER_2 + "\n" + PLAYER_3 + "\n";
 		ByteArrayInputStream in = new ByteArrayInputStream(players.getBytes());
 		try (Scanner gameInput = new Scanner(in)) {
-			List<String> playersName = Main.addPlayers(gameInput, NUMBER_OF_PLAYERS);
+			List<String> playersName = new Main(gameInput).addPlayers(NUMBER_OF_PLAYERS);
 			Assert.assertEquals(EXPECTED_RESULT, playersName);
 		}
 	}

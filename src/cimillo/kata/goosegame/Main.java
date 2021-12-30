@@ -6,9 +6,47 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 
-public abstract class Main {
+public class Main {
 
-	static List<String> addPlayers(Scanner gameInput, int playersNumber) {
+	public static void main(String[] args) {
+		System.out.println("****************************************");
+		System.out.println("\tWelcome to Goose Game!");
+		System.out.println("****************************************");
+		System.out.println("The game begins...\n");
+		System.out.println("Press Enter to continue ");
+		try (Scanner gameInput = new Scanner(System.in)) {
+			Main main = new Main(gameInput);
+			gameInput.nextLine();
+			// Read number of players
+			int playersNumber = 0;
+			while (playersNumber == 0) {
+				System.out.println("How many players? ");
+				try {
+					playersNumber = gameInput.nextInt();
+				} catch (InputMismatchException e) {
+					gameInput.nextLine();
+					System.out.println("Insert a valid number");
+				}
+			}
+			gameInput.nextLine();
+
+			List<String> playersNames = main.addPlayers(playersNumber);
+			GooseGame.letsPlay(playersNames);
+
+		} catch (InterruptedException e) {
+			// TODO: handle exception
+		}
+		System.exit(0);
+
+	}
+
+	private final Scanner gameInput;
+
+	public Main(Scanner gameInput) {
+		this.gameInput = gameInput;
+	}
+
+	List<String> addPlayers(int playersNumber) {
 		List<String> playerList = new ArrayList<>();
 		int addedPlayers = 0;
 		for (int i = 1; i < playersNumber + 1; i++) {
@@ -33,36 +71,6 @@ public abstract class Main {
 		}
 		System.out.println("********************************************");
 		return playerList;
-	}
-
-	public static void main(String[] args) {
-		System.out.println("****************************************");
-		System.out.println("\tWelcome to Goose Game!");
-		System.out.println("****************************************");
-		System.out.println("The game begins...\n");
-		System.out.println("Press Enter to continue ");
-		try (Scanner gameInput = new Scanner(System.in)) {
-			gameInput.nextLine();
-			// Read number of players
-			int playersNumber = 0;
-			while (playersNumber == 0) {
-				System.out.println("How many players? ");
-				try {
-					playersNumber = gameInput.nextInt();
-				} catch (InputMismatchException e) {
-					gameInput.nextLine();
-					System.out.println("Insert a valid number");
-				}
-			}
-			gameInput.nextLine();
-			List<String> playersNames = addPlayers(gameInput, playersNumber);
-			GooseGame.letsPlay(playersNames);
-
-		} catch (InterruptedException e) {
-			// TODO: handle exception
-		}
-		System.exit(0);
-
 	}
 
 }

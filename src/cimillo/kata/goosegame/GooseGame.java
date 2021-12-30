@@ -11,6 +11,15 @@ import java.util.concurrent.TimeUnit;
  *         Main class for the "Goose Game"
  */
 public class GooseGame {
+	
+	/**
+	 * Board on which the game takes place
+	 */
+	private final Board board = new Board(this);
+
+	private final List<Player> playersList = new ArrayList<>();
+
+	private boolean thereIsAWinner = false;
 
 	/**
 	 * @param participantsName TODO @return true if the player name is unique in the
@@ -38,15 +47,6 @@ public class GooseGame {
 		game.makesMoves(game.playersList.size());
 		return game;
 	}
-
-	/**
-	 * Board on which the game takes place
-	 */
-	private final Board board = new Board(this);
-
-	private final List<Player> playersList = new ArrayList<>();
-
-	private boolean thereIsAWinner = false;
 
 	public List<Player> getPlayersList() {
 		return playersList;
