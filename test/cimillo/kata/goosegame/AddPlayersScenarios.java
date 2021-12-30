@@ -2,11 +2,12 @@ package cimillo.kata.goosegame;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Scanner;
 
 import org.junit.Assert;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class AddPlayersScenarios {
@@ -19,22 +20,16 @@ public class AddPlayersScenarios {
 	public static final String CONTEXT_SEPARATOR = "********************************************";
 	public static final String NEW_LINE_SEPARATOR = "\r\n";
 
-	public static final String EXPECTED_RESULT = "\nPlayers: " + PLAYER_1 + ", " + PLAYER_2 + ", " + PLAYER_3;
-
-	private final ByteArrayOutputStream outputStreamCaptor = new ByteArrayOutputStream();
-
+	public static final List<String> EXPECTED_RESULT = Collections
+			.unmodifiableList(Arrays.asList(PLAYER_1, PLAYER_2, PLAYER_3));
 
 	@Test
 	void addDuplicatePlayers() {
 		String players = PLAYER_1 + "\n" + PLAYER_2 + "\n" + PLAYER_2 + "\n" + PLAYER_3 + "\n";
 		ByteArrayInputStream in = new ByteArrayInputStream(players.getBytes());
 		try (Scanner gameInput = new Scanner(in)) {
-			GooseGame game = new GooseGame(gameInput);
-			game.addPlayers(NUMBER_OF_PLAYERS);
-			String outputConsole = outputStreamCaptor
-					.toString().replace(NEW_LINE_SEPARATOR + CONTEXT_SEPARATOR + NEW_LINE_SEPARATOR, "");
-			Assert.assertEquals("\nPlayers: " + PLAYER_1 + ", " + PLAYER_2 + ", " + PLAYER_3,
-					outputConsole.substring(outputConsole.lastIndexOf("\n")));
+			List<String> playersName = Main.addPlayers(gameInput, NUMBER_OF_PLAYERS);
+			Assert.assertEquals(EXPECTED_RESULT, playersName);
 		}
 	}
 
@@ -43,17 +38,8 @@ public class AddPlayersScenarios {
 		String players = PLAYER_1 + "\n" + PLAYER_2 + "\n" + PLAYER_3 + "\n";
 		ByteArrayInputStream in = new ByteArrayInputStream(players.getBytes());
 		try (Scanner gameInput = new Scanner(in)) {
-			GooseGame game = new GooseGame(gameInput);
-			game.addPlayers(NUMBER_OF_PLAYERS);
-			String outputConsole = outputStreamCaptor
-					.toString().replace(NEW_LINE_SEPARATOR + CONTEXT_SEPARATOR + NEW_LINE_SEPARATOR, "");
-			Assert.assertEquals(EXPECTED_RESULT,
-					outputConsole.substring(outputConsole.lastIndexOf("\n")));
+			List<String> playersName = Main.addPlayers(gameInput, NUMBER_OF_PLAYERS);
+			Assert.assertEquals(EXPECTED_RESULT, playersName);
 		}
-	}
-
-	@BeforeEach
-	public void setUp() {
-	    System.setOut(new PrintStream(outputStreamCaptor));
 	}
 }

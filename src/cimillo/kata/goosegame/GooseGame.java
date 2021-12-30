@@ -1,11 +1,9 @@
 package cimillo.kata.goosegame;
 
 import java.util.ArrayList;
-import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Random;
-import java.util.Scanner;
-import java.util.stream.Collectors;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author Giovanna
@@ -15,79 +13,40 @@ import java.util.stream.Collectors;
 public class GooseGame {
 
 	/**
+	 * @param participantsName TODO @return true if the player name is unique in the
+	 *                         current state of the game
+	 */
+	public static List<String> checkParticipants(List<String> participatsList, String participantsName) {
+		boolean existPlayer = participatsList.stream().anyMatch(p -> p.equalsIgnoreCase(participantsName));
+		if (!existPlayer) {
+			participatsList.add(participantsName);
+		}
+		return participatsList;
+	}
+
+	/**
+	 * Access point to start a game
+	 *
+	 * @param playersNumber
+	 * @throws InterruptedException
+	 *
+	 */
+	public static GooseGame letsPlay(List<String> playersNames) throws InterruptedException {
+		GooseGame game = new GooseGame();
+		playersNames.forEach(p -> game.playersList.add(new Player(p)));
+
+		game.makesMoves(game.playersList.size());
+		return game;
+	}
+
+	/**
 	 * Board on which the game takes place
 	 */
 	private final Board board = new Board(this);
 
-	private final Scanner gameInput;
-
-	/**
-	 * Game participants
-	 */
-	private final List<Player> playersList = new ArrayList<>();
+	private List<Player> playersList = new ArrayList<>();
 
 	private boolean thereIsAWinner = false;
-
-	public static void main(String[] args) {
-
-		System.out.println("****************************************");
-		System.out.println("\tWelcome to Goose Game!");
-		System.out.println("****************************************");
-		System.out.println("Press Enter to continue ");
-		try (Scanner gameInput = new Scanner(System.in)) {
-			gameInput.nextLine();
-			GooseGame game = new GooseGame(gameInput);
-			game.letsPlay();
-		}
-		System.exit(0);
-
-	}
-
-	public GooseGame(Scanner gameInput) {
-		this.gameInput = gameInput;
-	}
-
-	public GooseGame() {
-		try (Scanner gameInput = new Scanner(System.in)) {
-			this.gameInput = gameInput;
-		}
-	}
-
-
-	void addPlayers(int playersNumber) {
-		for (int i = 1; i < playersNumber + 1; i++) {
-			boolean validName = false;
-			while (!validName) {
-				System.out.println("\nPlayer " + i + " enter your name:");
-				String playerName = gameInput.nextLine();
-				if (playerName.trim().isEmpty()) {
-					System.out.println("Player " + i + " please enter a not empty name.");
-				} else {
-					validName = checkParticipantName(playerName) || validName;
-					if (validName) {
-						playersList.add(new Player(playerName));
-
-						String currentPlayers = playersList.stream().map(Player::getName)
-								.collect(Collectors.joining(", "));
-						System.out.println("\nPlayers: " + currentPlayers);
-					}
-				}
-			}
-		}
-		System.out.println("********************************************");
-	}
-
-	/**
-	 * @param playerName
-	 * @return true if the player name is unique in the current state of the game
-	 */
-	private boolean checkParticipantName(String playerName) {
-		boolean existPlayer = playersList.stream().anyMatch(p -> p.getName().equalsIgnoreCase(playerName));
-		if (existPlayer) {
-			System.out.println(playerName + ": player already present\n");
-		}
-		return !existPlayer;
-	}
 
 	public List<Player> getPlayersList() {
 		return playersList;
@@ -97,34 +56,12 @@ public class GooseGame {
 		return thereIsAWinner;
 	}
 
-	/**
-	 * Access point to start a game
-	 *
-	 */
-	private void letsPlay() {
-		System.out.println("The game begins...\n");
-		int playersNumber = 0;
-		while (playersNumber == 0) {
-			System.out.println("How many players? ");
-			try {
-				playersNumber = gameInput.nextInt();
-			} catch (InputMismatchException e) {
-				gameInput.nextLine();
-				System.out.println("Insert a valid number");
-			}
-		}
-		gameInput.nextLine();
-		addPlayers(playersNumber);
-		makesMoves(playersNumber);
-	}
-
-	private void makesMoves(int playersNumber) {
+	private void makesMoves(int playersNumber) throws InterruptedException {
 		int i = 0;
 
 		while (!thereIsAWinner && i <= playersNumber) {
 			Player currentPlayer = playersList.get(i);
-			System.out.println("\n" + currentPlayer.getName() + " press Enter to play!");
-			gameInput.nextLine();
+			System.out.println("\n********************************************");
 			System.out.println("\t" + currentPlayer.getName() + " thows dice...");
 
 //			Player throws dice
@@ -136,7 +73,7 @@ public class GooseGame {
 			String msgFromBoard = board.movePlayer(currentPlayer, score[0] + score[1]);
 			System.out.println(msgFromBoard);
 
-			System.out.println("********************************************");
+			System.out.println("********************************************\n");
 			i = i == playersNumber - 1 ? 0 : i + 1;
 		}
 	}
@@ -145,7 +82,8 @@ public class GooseGame {
 		this.thereIsAWinner = thereIsAWinner;
 	}
 
-	private int[] throwDice() {
+	private int[] throwDice() throws InterruptedException {
+		TimeUnit.SECONDS.sleep(2);
 		int dice[] = new int[2];
 		int minScore = 1;
 		int maxScore = 6;
