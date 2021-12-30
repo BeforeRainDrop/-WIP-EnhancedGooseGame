@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 
-public class Main {
+public abstract class Main {
 
 	static List<String> addPlayers(Scanner gameInput, int playersNumber) {
 		List<String> playerList = new ArrayList<>();

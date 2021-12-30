@@ -44,7 +44,7 @@ public class GooseGame {
 	 */
 	private final Board board = new Board(this);
 
-	private List<Player> playersList = new ArrayList<>();
+	private final List<Player> playersList = new ArrayList<>();
 
 	private boolean thereIsAWinner = false;
 
