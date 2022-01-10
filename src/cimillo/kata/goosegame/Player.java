@@ -43,7 +43,8 @@ public class Player {
 		}
 	}
 
-	String playerStateDescription() {
+	@Override
+	public String toString() {
 		return positionsDescription(this, this.getPreviousPosition(), this.getPosition());
 	}
 

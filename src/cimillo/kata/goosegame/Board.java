@@ -112,7 +112,7 @@ public class Board {
 		}
 
 		newPosition = movingPlayer.getPosition();
-		msg += movingPlayer.playerStateDescription();
+		msg += movingPlayer;
 
 		if (BoxType.getBoxType(newPosition) == BoxType.VICTORY && !gooseGame.isThereAWinner()) {
 			gooseGame.setThereIsAWinner(true);
